@@ -1,52 +1,56 @@
-# 🖋 Scriptor
+# tsnew
 
 Code Generator for TypeScript
 
-## Set up Scriptor in your project
+## Set up tsnew in your project
 
-1. Install `@scriptortools/cli` as a global dependency:
+1. Install `tsnew` as a global dependency:
 
 ```sh
-npm install @scriptortools/cli --global
+npm install tsnew --global
 ```
 
 2. Run the setup command:
 
 ```sh
-scriptor setup
+tsnew setup
 ```
 
-This will create a `scriptor.config.ts` file like this:
+This will create an `.tsnew/config.ts` file like this:
 
 ```ts
-import { defineConfig } from "@scriptortools/core";
+import { defineConfig } from "tsnew";
 
 export default defineConfig({
-  templatesPath: ".scriptor/templates",
+  templatesPath: ".tsnew/templates",
 });
 ```
 
 3. Create a new template:
 
 ```sh
-scriptor new template component
+tsnew template component
 ```
 
-This will create a new `.scriptor/templates/component/template.ts` file:
+This will create a new `.tsnew/templates/component/component.template.ts` file:
 
 ```ts
-import { defineTemplate, dedent, pascalCase } from "@scriptortools/core";
+import { defineInput, defineOutput } from "tsnew";
 
-export default defineTemplate(
-  ({ name }) => (
-    {
-      to: `components/${pascalCase(name)}.ts`,
-    },
-    `
-      export function ${pascalCase(name)} {
-        return <p>I am a component.</p>;
-      }
-    `
-  )
-);
+export const input = defineInput({
+  name: {
+    description: "Name of component",
+  },
+});
+
+const template = `
+  export function ${input.name} {
+    return <p>I am a component.</p>;
+  }
+`;
+
+export const output = defineOutput({
+  filePath: `components/${input.name}.tsx`,
+  template,
+});
 ```
