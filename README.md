@@ -25,3 +25,28 @@ export default defineConfig({
   templatesPath: ".scriptor/templates",
 });
 ```
+
+3. Create a new template:
+
+```sh
+scriptor new template component
+```
+
+This will create a new `.scriptor/templates/component/template.ts` file:
+
+```ts
+import { defineTemplate, dedent, pascalCase } from "@scriptortools/core";
+
+export default defineTemplate(
+  ({ name }) => (
+    {
+      to: `components/${pascalCase(name)}.ts`,
+    },
+    `
+      export function ${pascalCase(name)} {
+        return <p>I am a component.</p>;
+      }
+    `
+  )
+);
+```
