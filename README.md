@@ -22,6 +22,6 @@ This will create a `scriptor.config.ts` file like this:
 import { defineConfig } from "@scriptortools/core";
 
 export default defineConfig({
-  templatesPath: "templates",
+  templatesPath: ".scriptor/templates",
 });
 ```
