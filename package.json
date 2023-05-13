@@ -1,0 +1,37 @@
+{
+  "name": "tsnew",
+  "version": "0.1.0",
+  "description": "Code Generator for TypeScript",
+  "type": "module",
+  "main": "dist/index.cjs",
+  "module": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "bin": {
+    "tsnew": "dist/cli.js"
+  },
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "tsup"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/sunnysingh/tsnew.git"
+  },
+  "keywords": [
+    "typescript",
+    "scaffold",
+    "generator"
+  ],
+  "author": "Sunny Singh <me@sunnysingh.io> (https://sunnysingh.io/)",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/sunnysingh/tsnew/issues"
+  },
+  "homepage": "https://github.com/sunnysingh/tsnew#readme",
+  "devDependencies": {
+    "tsup": "^6.7.0",
+    "typescript": "^5.0.4"
+  }
+}

@@ -1,4 +1,6 @@
-# tsnew
+# 🆕 tsnew
+
+> 🚧 **COMING SOON**
 
 Code Generator for TypeScript
 
