@@ -9,7 +9,6 @@ void (async function main() {
   const cli = cac("tsnew");
 
   commands.run.registerCommand(cli);
-  commands.setup.registerCommand(cli);
   commands.template.registerCommand(cli);
 
   cli.help();
