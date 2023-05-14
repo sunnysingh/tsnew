@@ -26,8 +26,8 @@ Templates are defined in `.template.ts` files:
 import { defineTemplate } from "tsnew";
 
 export default defineTemplate(async (context) => ({
-  path: `components/${context.input.name}.tsx`,
-  content: `// Hello ${context.input.name}.`,
+  path: `features/${context.input.name}.ts`,
+  content: `// This is a starter file for the ${context.input.name} feature.`,
 }));
 ```
 
