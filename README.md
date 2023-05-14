@@ -18,7 +18,7 @@ npm install tsnew --save-dev
 npx tsnew
 ```
 
-## 🔠 Template Syntax
+## 🔠 Template API
 
 Templates are defined in `.template.ts` files:
 
@@ -31,12 +31,12 @@ export default defineTemplate(async (context) => ({
 }));
 ```
 
-The template function receives a context object for useful input data, and returns an object for the file operation:
+The template function receives a context object for input data, and returns an object for the file operation:
 
 - `path` - the file path to be saved
 - `content` - the file content to be saved
 
-Templating with tsnew is powerful! You can import other packages and run asynchronous data processing if you need to.
+Templating with tsnew is powerful! If necessary, you can import other packages and run asynchronous data processing.
 
 More features will be added to support use cases such as updating config files and running lifecycle commands.
 
