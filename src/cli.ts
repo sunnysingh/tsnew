@@ -3,22 +3,14 @@
 import { cac } from "cac";
 
 import { version } from "../package.json";
-import * as actions from "./actions";
+import * as commands from "./commands";
 
 void (async function main() {
   const cli = cac("tsnew");
 
-  // TODO: Separate out commands (not just actions) into separate files.
-  // Example: defineRootCommand(cli);
-  cli.command("", "View available templates").action(actions.root);
-
-  cli.command("<name>", "Run template").action(actions.run);
-
-  cli.command("setup", "Set up tsnew in a project").action(actions.setup);
-
-  cli
-    .command("template <name>", "Create a new template")
-    .action(actions.template);
+  commands.run.registerCommand(cli);
+  commands.setup.registerCommand(cli);
+  commands.template.registerCommand(cli);
 
   cli.help();
 

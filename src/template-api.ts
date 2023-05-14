@@ -12,7 +12,7 @@ export interface TemplateDefinition {
 }
 
 export function defineTemplate(
-  creator: (args: TemplateArgs) => TemplateDefinition
+  template: (args: TemplateArgs) => TemplateDefinition
 ) {
-  return creator;
+  return template;
 }
