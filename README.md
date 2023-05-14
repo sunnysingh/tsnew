@@ -31,9 +31,7 @@ export default defineTemplate(async (context) => ({
 }));
 ```
 
-The template function receives a context object for useful input data.
-
-The template function must return an object with the following properties:
+The template function receives a context object for useful input data, and returns an object for the file operation:
 
 - `path` - the file path to be saved
 - `content` - the file content to be saved
