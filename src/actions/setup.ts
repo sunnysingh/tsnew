@@ -10,5 +10,5 @@ export const setup = async () => {
 
   await createConfigDir();
 
-  console.log(`Created ${configDir}`);
+  console.log(`\nCreated ${configDir}`);
 };
