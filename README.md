@@ -4,37 +4,29 @@
 
 Code Generator for TypeScript
 
-## Set up tsnew in your project
+## 📖 Set up tsnew in your project
 
-1. Install `tsnew` as a global dependency:
+1. Install `tsnew` as a development dependency:
 
 ```sh
-npm install tsnew --global
+npm install tsnew --save-dev
 ```
 
 2. Run the setup command:
 
 ```sh
-tsnew setup
+npx tsnew setup
 ```
 
-This will create an `.tsnew/config.ts` file like this:
-
-```ts
-import { defineConfig } from "tsnew";
-
-export default defineConfig({
-  templatesPath: ".tsnew/templates",
-});
-```
+This will create a `.tsnew` folder to store templates.
 
 3. Create a new template:
 
 ```sh
-tsnew template component
+npx tsnew template component
 ```
 
-This will create a new `.tsnew/templates/component/component.template.ts` file:
+This will create a `.tsnew/templates/component/default.template.ts` file:
 
 ```ts
 import { defineInput, defineOutput } from "tsnew";
@@ -56,3 +48,14 @@ export const output = defineOutput({
   template,
 });
 ```
+
+## 👋 Development
+
+**Prerequisites**: [NVM](https://nvm.sh/)
+
+1. `nvm use`
+2. `npm install`
+3. `npm run dev`
+4. `npm link`
+
+You can now run `tsnew` commands.
