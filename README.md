@@ -1,6 +1,6 @@
 # 🆕 tsnew
 
-> 🚧 **COMING SOON**
+> 🚧 **COMING SOON** - Experimental stage. Not ready for public usage yet.
 
 Code Generator for TypeScript
 
