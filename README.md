@@ -20,7 +20,7 @@ npx tsnew
 
 ## 🔠 Template Syntax
 
-Templates are defined `.template.ts` files:
+Templates are defined in `.template.ts` files:
 
 ```ts
 import { defineTemplate } from "tsnew";
@@ -37,6 +37,8 @@ The template function receives a context object for useful input data, and retur
 - `content` - the file content to be saved
 
 Templating with tsnew is powerful! You can import other packages and run asynchronous data processing if you need to.
+
+More features will be added to support use cases such as updating config files and running lifecycle commands.
 
 ## 🎦 Development
 
