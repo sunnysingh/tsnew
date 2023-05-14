@@ -1,17 +1,30 @@
-import { stat } from "node:fs/promises";
+import { stat, readdir } from "node:fs/promises";
 
-import { configPath, templatesPath } from "../paths";
+import {
+  configDir,
+  hasConfigDir,
+  createConfigDir,
+  templatesPath,
+} from "../files";
 
-export const rootAction = async () => {
-  await stat(configPath).catch(() => {
-    console.log("You have not set up tsnew yet.");
-    console.log("Please run: npx tsnew setup");
-    process.exit(1);
-  });
+export const root = async () => {
+  const noSetup = !(await hasConfigDir());
+
+  if (noSetup) {
+    console.log("Project is not set up. Setting up...");
+    await createConfigDir();
+    console.log(`Created ${configDir}!\n`);
+  }
 
   await stat(templatesPath).catch(() => {
     console.log("There are no available templates.");
-    console.log("Please run: npx tsnew template");
+    console.log("Please run: npx tsnew template <name>");
     process.exit(1);
   });
+
+  const templates = await readdir(templatesPath);
+
+  console.log("\nAvailable templates:\n");
+  console.log(`  • ${templates.join("\n  ")}`);
+  console.log("\nRun: npx tsnew <template>");
 };

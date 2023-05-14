@@ -1,44 +1,37 @@
-import { stat, mkdir, writeFile } from "node:fs/promises";
 import path from "node:path";
+import { mkdir, writeFile } from "node:fs/promises";
 
-import { configPath } from "../paths";
+import { configDir, hasConfigDir, createConfigDir, configPath } from "../files";
 
-const template = (name: string) =>
+const compileContent = (name: string) =>
   `
-import { defineInput, defineOutput } from "tsnew";
+import { defineTemplate } from "tsnew";
 
-export const input = defineInput({
-  name: {
-    description: "Name of ${name}",
-  },
-});
-
-const template = \`
-  // These contents will be placed into the file.
-  
-  // Use input variables like this:
-  // Name of ${name}: \${input.name}
-\`;
-
-export const output = defineOutput({
-  filePath: \`${name}/\${input.name}.ts\`,
-  template,
-});
+export default defineTemplate(({ input }) => ({
+  path: \`${name}/\${input.name}.tsx\`,
+  content: \`Hello \${input.name}.\`,
+}));
 `.trim();
 
-export const templateAction = async (name: string) => {
-  // TODO: Abstract this into a function and autocreate config dir.
-  await stat(configPath).catch(() => {
-    console.log("You have not set up tsnew yet.");
-    console.log("Please run: npx tsnew setup");
-    process.exit(1);
-  });
+export const template = async (name: string) => {
+  const noSetup = !(await hasConfigDir());
+
+  if (noSetup) {
+    console.log("Project is not set up. Setting up...");
+    await createConfigDir();
+    console.log(`Created ${configDir}!\n`);
+  }
 
   const templatePath = path.join(configPath, "templates", name);
+  const templateDefaultFilePath = path.join(
+    templatePath,
+    "default.template.ts"
+  );
 
   await mkdir(templatePath, { recursive: true });
-  await writeFile(
-    path.join(templatePath, "default.template.ts"),
-    `${template(name)}\n`
+  await writeFile(templateDefaultFilePath, `${compileContent(name)}\n`);
+
+  console.log(
+    `\nCreated ${path.relative(process.cwd(), templateDefaultFilePath)}`
   );
 };

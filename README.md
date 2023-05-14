@@ -29,24 +29,12 @@ npx tsnew template component
 This will create a `.tsnew/templates/component/default.template.ts` file:
 
 ```ts
-import { defineInput, defineOutput } from "tsnew";
+import { defineTemplate } from "tsnew";
 
-export const input = defineInput({
-  name: {
-    description: "Name of component",
-  },
-});
-
-const template = `
-  export function ${input.name} {
-    return <p>I am a component.</p>;
-  }
-`;
-
-export const output = defineOutput({
-  filePath: `components/${input.name}.tsx`,
-  template,
-});
+export default defineTemplate((input) => ({
+  path: `components/${input.name}.tsx`,
+  template: `Hello ${input.name}.`,
+}));
 ```
 
 ## 👋 Development

@@ -37,6 +37,8 @@
     "typescript": "^5.0.4"
   },
   "dependencies": {
-    "cac": "^6.7.14"
+    "bundle-require": "^4.0.1",
+    "cac": "^6.7.14",
+    "esbuild": "^0.17.19"
   }
 }

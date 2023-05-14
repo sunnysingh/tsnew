@@ -3,28 +3,22 @@
 import { cac } from "cac";
 
 import { version } from "../package.json";
-import { rootAction } from "./actions/root";
-import { setupAction } from "./actions/setup";
-import { templateAction } from "./actions/template";
+import * as actions from "./actions";
 
 void (async function main() {
   const cli = cac("tsnew");
 
-  cli.command("", "View available templates").action(rootAction);
+  // TODO: Separate out commands (not just actions) into separate files.
+  // Example: defineRootCommand(cli);
+  cli.command("", "View available templates").action(actions.root);
 
-  cli.command("setup", "Set up tsnew in a project").action(async () => {
-    await setupAction().catch((error) => {
-      console.log(`Unable to set up project: ${error}`);
-    });
-  });
+  cli.command("<name>", "Run template").action(actions.run);
+
+  cli.command("setup", "Set up tsnew in a project").action(actions.setup);
 
   cli
     .command("template <name>", "Create a new template")
-    .action(async (name) => {
-      await templateAction(name).catch((error) => {
-        console.log(`Unable to create template: ${error}`);
-      });
-    });
+    .action(actions.template);
 
   cli.help();
 

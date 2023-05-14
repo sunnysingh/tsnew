@@ -1,25 +1,14 @@
-import { mkdir, writeFile } from "node:fs/promises";
+import { configDir, hasConfigDir, createConfigDir } from "../files";
 
-import { configPath, readmePath } from "../paths";
+export const setup = async () => {
+  const exists = await hasConfigDir();
 
-const README = `
-# 🆕 tsnew
+  if (exists) {
+    console.log("This project is already set up.");
+    return;
+  }
 
-Code Generator for TypeScript
+  await createConfigDir();
 
-## Usage
-
-For a list of available templates, run:
-
-\`\`\`sh
-npx tsnew
-\`\`\`
-`.trim();
-
-export const setupAction = async () => {
-  await mkdir(configPath);
-
-  console.log;
-
-  await writeFile(readmePath, `${README}\n`);
+  console.log(`Created ${configDir}`);
 };
