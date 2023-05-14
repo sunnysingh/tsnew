@@ -36,7 +36,9 @@ The template function receives a context object for useful input data, and retur
 - `path` - the file path to be saved
 - `content` - the file content to be saved
 
-Your `.template.ts` files are powerful! You can import and use other packages, templating libraries, and any other code. You may have even noticed that the template function is asynchronous, which enables complex data processing tasks if you need it.
+Your `.template.ts` files are powerful! You can import and other packages, templating libraries, and any of your code.
+
+You may have even noticed that the template function is asynchronous to enable complex data processing.
 
 ## 🎦 Development
 
