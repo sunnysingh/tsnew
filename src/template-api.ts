@@ -2,17 +2,17 @@ export interface TemplateInput {
   name: string;
 }
 
-export interface TemplateArgs {
+export interface TemplateContext {
   input: TemplateInput;
 }
 
-export interface TemplateDefinition {
+export interface TemplateResult {
   path: string;
   content: string;
 }
 
 export function defineTemplate(
-  template: (args: TemplateArgs) => TemplateDefinition
+  templateFunction: (context: TemplateContext) => TemplateResult
 ) {
-  return template;
+  return templateFunction;
 }

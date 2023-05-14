@@ -5,6 +5,7 @@ import { bundleRequire } from "bundle-require";
 import {
   intro,
   outro,
+  text,
   select,
   isCancel,
   cancel,
@@ -12,83 +13,96 @@ import {
 } from "@clack/prompts";
 
 import { configDir, templatesPath } from "../files";
+import { TemplateContext } from "../template-api";
 import { action as templateAction } from "./template/action";
 
 const spinner = clackSpinner();
 const newTemplateAnswerValue = "__NEW_TEMPLATE__";
 
 export function registerCommand(cli: CAC) {
-  cli.command("[name]", "Run template").action(async (name?: string) => {
-    console.log(); // newline
+  cli
+    .command("[templateName]", "Run template")
+    .action(async (templateName?: string) => {
+      console.log(); // newline
 
-    // Automatically run template command if templates don't exist.
-    try {
-      await stat(templatesPath);
-    } catch (error) {
-      console.log(`You don't have any templates.`);
-      console.log("Let's create your first one!\n");
-      intro(`🆕 tsnew`);
-      await runTemplateCreatorWorkflow();
-      return;
-    }
-
-    let selectedTemplate = name;
-
-    intro(`🆕 tsnew`);
-
-    if (!name) {
-      const templates = await readdir(templatesPath);
-
-      const response = await select({
-        message: "Which template do you want to run?",
-        options: [
-          { value: newTemplateAnswerValue, label: "Create a new template" },
-          ...templates.map((template) => ({
-            value: template,
-            label: template,
-          })),
-        ],
-      });
-
-      if (isCancel(response)) {
-        cancel("Operation cancelled.");
-        process.exit(0);
-      }
-
-      if (response === newTemplateAnswerValue) {
+      // Automatically run template command if templates don't exist.
+      try {
+        await stat(templatesPath);
+      } catch (error) {
+        console.log(`You don't have any templates.`);
+        console.log("Let's create your first one!\n");
+        intro(`🆕 tsnew`);
         await runTemplateCreatorWorkflow();
         return;
       }
 
-      selectedTemplate = response as string;
-    }
+      let selectedTemplate = templateName;
 
-    if (!selectedTemplate) return;
+      intro(`🆕 tsnew`);
 
-    spinner.start(`Running ${selectedTemplate}...`);
+      if (!templateName) {
+        const templates = await readdir(templatesPath);
 
-    // TODO: Dynamically find all available `*.template.ts` files.
-    const templatePath = path.join(
-      templatesPath,
-      selectedTemplate,
-      "default.template.ts"
-    );
+        const response = await select({
+          message: "Which template do you want to run?",
+          options: [
+            ...templates.map((template) => ({
+              label: template,
+              value: template,
+            })),
+            { label: "add a new template", value: newTemplateAnswerValue },
+          ],
+        });
 
-    const { mod } = await bundleRequire({ filepath: templatePath });
+        if (isCancel(response)) {
+          cancel("Operation cancelled.");
+          process.exit(0);
+        }
 
-    const compiled = await mod.default({ input: { name: selectedTemplate } });
-    const compiledPath = path.join(
-      process.cwd(),
-      path.normalize(compiled.path)
-    );
+        if (response === newTemplateAnswerValue) {
+          await runTemplateCreatorWorkflow();
+          return;
+        }
 
-    await mkdir(path.dirname(compiledPath), { recursive: true });
-    await writeFile(compiledPath, compiled.content, "utf-8");
+        selectedTemplate = response as string;
+      }
 
-    spinner.stop(`Created ${compiledPath}`);
+      if (!selectedTemplate) return;
 
-    outro(`✅ Finished`);
-  });
+      // TODO: Dynamically find all available `*.template.ts` files.
+      const templatePath = path.join(
+        templatesPath,
+        selectedTemplate,
+        "default.template.ts"
+      );
+
+      const { mod } = await bundleRequire({ filepath: templatePath });
+
+      const name = await text({
+        message: `What is the name of this ${selectedTemplate}?`,
+      });
+
+      if (isCancel(name)) {
+        cancel("Operation cancelled.");
+        process.exit(0);
+      }
+
+      spinner.start(`Running ${selectedTemplate}...`);
+
+      const templateContext: TemplateContext = { input: { name } };
+      const compiled = await mod.default(templateContext);
+      const compiledPath = path.join(
+        process.cwd(),
+        path.normalize(compiled.path)
+      );
+
+      await mkdir(path.dirname(compiledPath), { recursive: true });
+      await writeFile(compiledPath, compiled.content, "utf-8");
+
+      spinner.stop(`Created ${compiledPath}`);
+
+      outro(`✅ Finished`);
+    });
 }
 
 async function runTemplateCreatorWorkflow() {

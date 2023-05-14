@@ -51,8 +51,8 @@ const compileContent = (name: string) =>
   `
 import { defineTemplate } from "tsnew";
 
-export default defineTemplate(({ input }) => ({
-  path: \`${name}/\${input.name}.ts\`,
-  content: \`// Hello \${input.name}!\`,
+export default defineTemplate((context) => ({
+  path: \`${name}/\${context.input.name}.ts\`,
+  content: \`// Hello \${context.input.name}!\`,
 }));
 `.trim();
