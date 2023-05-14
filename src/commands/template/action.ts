@@ -10,6 +10,7 @@ import {
 } from "@clack/prompts";
 
 import { hasConfigDir, createConfigDir, configPath } from "../../files";
+import { compileDefaultTemplate } from "./default-template";
 
 const spinner = clackSpinner();
 
@@ -40,19 +41,9 @@ export async function action(): Promise<string> {
   );
 
   await mkdir(templatePath, { recursive: true });
-  await writeFile(templateDefaultFilePath, `${compileContent(name)}\n`);
+  await writeFile(templateDefaultFilePath, `${compileDefaultTemplate(name)}\n`);
 
   spinner.stop(`Created ${templateRelativePath}`);
 
   return name;
 }
-
-const compileContent = (name: string) =>
-  `
-import { defineTemplate } from "tsnew";
-
-export default defineTemplate((context) => ({
-  path: \`${name}/\${context.input.name}.ts\`,
-  content: \`// This is a starter file for the \${context.input.name} ${name}!\`,
-}));
-`.trim();
