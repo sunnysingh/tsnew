@@ -1,17 +1,15 @@
 import path from "node:path";
 import { mkdir, writeFile, stat, readdir } from "node:fs/promises";
 import type { CAC } from "cac";
-import { bold } from "colorette";
-import { AsciiTree } from "oo-ascii-tree";
-import boxen from "boxen";
 import { bundleRequire } from "bundle-require";
 import { globby } from "globby";
 import { text, select, isCancel, cancel } from "@clack/prompts";
 
 import * as flow from "../flow";
-import { configDir, templatesPath } from "../files";
+import { templatesPath } from "../files";
 import { TemplateContext } from "../template-api";
 import { action as templateAction } from "./template/action";
+import { printInstructions } from "./template/instructions";
 
 const newTemplateAnswerValue = "__NEW_TEMPLATE__";
 
@@ -26,7 +24,7 @@ export function registerCommand(cli: CAC) {
       } catch (error) {
         flow.log.warn("You don't have any templates.");
         flow.log.info("Let's create your first one!");
-        await runTemplateCreatorWorkflow();
+        await continueWithTemplateCreatorFlow();
         return;
       }
 
@@ -34,32 +32,8 @@ export function registerCommand(cli: CAC) {
       let selectedTemplate = templateName;
 
       if (!templateName) {
-        const templates = await readdir(templatesPath);
-        const templateOptions = templates.map((template) => ({
-          label: template,
-          value: template,
-        }));
-        const templateCreatorOption = {
-          label: "add a new template",
-          value: newTemplateAnswerValue,
-        };
-
-        const response = await select({
-          message: "Which template do you want to run?",
-          options: [...templateOptions, templateCreatorOption],
-        });
-
-        if (isCancel(response)) {
-          cancel("Operation cancelled.");
-          process.exit(0);
-        }
-
-        if (response === newTemplateAnswerValue) {
-          await runTemplateCreatorWorkflow();
-          return;
-        }
-
-        selectedTemplate = response as string;
+        const selectedTemplate = await addSelectTemplateFlow();
+        if (!selectedTemplate) return;
       }
 
       if (!selectedTemplate) {
@@ -85,11 +59,11 @@ export function registerCommand(cli: CAC) {
         )
       );
 
-      const name = await text({
+      const templateContextInputName = await text({
         message: `What is the name of this ${selectedTemplate}?`,
       });
 
-      if (isCancel(name)) {
+      if (isCancel(templateContextInputName)) {
         cancel("Operation cancelled.");
         process.exit(0);
       }
@@ -97,7 +71,9 @@ export function registerCommand(cli: CAC) {
       flow.spinner.start(`Running ${selectedTemplate} template`);
 
       for (const { mod } of bundledTemplateFiles) {
-        const templateContext: TemplateContext = { input: { name } };
+        const templateContext: TemplateContext = {
+          input: { name: templateContextInputName },
+        };
         const compiled = await mod.default(templateContext);
         const compiledPath = path.join(cwd, path.normalize(compiled.path));
 
@@ -113,26 +89,39 @@ export function registerCommand(cli: CAC) {
     });
 }
 
-async function runTemplateCreatorWorkflow() {
+async function continueWithTemplateCreatorFlow() {
   const createdName = await templateAction();
 
   flow.end();
 
-  const runCommand = `npx tsnew ${createdName}`;
-  const tree = new AsciiTree(
-    configDir,
-    new AsciiTree("templates", new AsciiTree(createdName))
-  );
+  printInstructions(createdName);
+}
 
-  console.log("You can update your new templates here:\n");
-  console.log(tree.toString());
+async function addSelectTemplateFlow(): Promise<string | undefined> {
+  const templates = await readdir(templatesPath);
+  const templateOptions = templates.map((template) => ({
+    label: template,
+    value: template,
+  }));
+  const templateCreatorOption = {
+    label: "add a new template",
+    value: newTemplateAnswerValue,
+  };
 
-  console.log("After that, you can run your template:");
-  console.log(
-    boxen(bold(runCommand), {
-      padding: { left: 1, right: 1 },
-      borderStyle: "round",
-      dimBorder: true,
-    })
-  );
+  const response = await select({
+    message: "Which template do you want to run?",
+    options: [...templateOptions, templateCreatorOption],
+  });
+
+  if (isCancel(response)) {
+    cancel("Operation cancelled.");
+    process.exit(0);
+  }
+
+  if (response === newTemplateAnswerValue) {
+    await continueWithTemplateCreatorFlow();
+    return;
+  }
+
+  return response as string;
 }

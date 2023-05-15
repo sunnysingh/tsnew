@@ -1,35 +1,25 @@
 import path from "node:path";
 import { mkdir, writeFile } from "node:fs/promises";
-import {
-  intro,
-  outro,
-  text,
-  isCancel,
-  cancel,
-  spinner as clackSpinner,
-} from "@clack/prompts";
+import { text, isCancel, cancel } from "@clack/prompts";
 
 import { hasConfigDir, createConfigDir, configPath } from "../../files";
+import * as flow from "../../flow";
 import { compileDefaultTemplate } from "./default-template";
 
-const spinner = clackSpinner();
-
 export async function action(): Promise<string> {
-  const response = await text({
+  const name = await text({
     message: "What is the name of this template?",
     validate(value) {
       if (value.length === 0) return "Name is required.";
     },
   });
 
-  if (isCancel(response)) {
+  if (isCancel(name)) {
     cancel("Operation cancelled.");
     process.exit(0);
   }
 
-  const name = response;
-
-  spinner.start("Creating template...");
+  flow.spinner.start("Creating template...");
 
   if (!(await hasConfigDir())) await createConfigDir();
 
@@ -43,7 +33,7 @@ export async function action(): Promise<string> {
   await mkdir(templatePath, { recursive: true });
   await writeFile(templateDefaultFilePath, `${compileDefaultTemplate(name)}\n`);
 
-  spinner.stop(`Created ${templateRelativePath}`);
+  flow.spinner.stop(`Created ${templateRelativePath}`);
 
   return name;
 }
