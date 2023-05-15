@@ -1,4 +1,18 @@
-export const compileDefaultTemplate = (name: string) =>
+export const readme = `
+# 🆕 tsnew
+
+Code Generator for TypeScript
+
+## Usage
+
+For a list of available templates, run:
+
+\`\`\`sh
+npx tsnew
+\`\`\`
+`.trim();
+
+export const compileStarterTemplate = (name: string) =>
   `
 import { defineTemplate } from "tsnew";
 

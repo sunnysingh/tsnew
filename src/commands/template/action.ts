@@ -7,10 +7,13 @@ import {
   hasConfigDir,
   createConfigDir,
   configPath,
+  templatesDir,
 } from "../../files";
-import { formatCommand, formatFileTree } from "../../format";
 import * as flow from "../../flow";
-import { compileDefaultTemplate } from "./default-template";
+import { formatCommand, formatFileTree } from "../../format";
+import { compileStarterTemplate } from "../../default-templates";
+
+const DEFAULT_TEMPLATE_FILENAME = "default.template.ts";
 
 export async function action(): Promise<string> {
   const name = await text({
@@ -29,24 +32,24 @@ export async function action(): Promise<string> {
 
   if (!(await hasConfigDir())) await createConfigDir();
 
-  const templatePath = path.join(configPath, "templates", name);
+  const templatePath = path.join(configPath, templatesDir, name);
   const templateRelativePath = path.relative(process.cwd(), templatePath);
   const templateDefaultFilePath = path.join(
     templatePath,
-    "default.template.ts"
+    DEFAULT_TEMPLATE_FILENAME
   );
 
   await mkdir(templatePath, { recursive: true });
-  await writeFile(templateDefaultFilePath, `${compileDefaultTemplate(name)}\n`);
+  await writeFile(templateDefaultFilePath, `${compileStarterTemplate(name)}\n`);
 
   flow.spinner.stop(`Created ${templateRelativePath}`);
 
   return name;
 }
 
-export function afterAction(name: string) {
+export function printPostActionInstructions(name: string) {
   console.log("You can update your new templates here:\n");
-  console.log(formatFileTree([configDir, "templates", name]));
+  console.log(formatFileTree([configDir, templatesDir, name]));
 
   console.log("After that, you can run your template:");
   console.log(formatCommand(`npx tsnew ${name}`));

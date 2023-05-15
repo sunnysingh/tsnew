@@ -10,8 +10,8 @@ export function formatCommand(command: string): string {
   });
 }
 
-export function formatFileTree(files: string[]): string {
-  const [firstFile, ...otherFiles] = files;
+export function formatFileTree(filePathSegments: string[]): string {
+  const [firstFile, ...otherFiles] = filePathSegments;
   const tree = new AsciiTree(firstFile);
   let nextChild: AsciiTree = tree;
 
