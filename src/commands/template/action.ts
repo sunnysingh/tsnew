@@ -2,7 +2,13 @@ import path from "node:path";
 import { mkdir, writeFile } from "node:fs/promises";
 import { text, isCancel, cancel } from "@clack/prompts";
 
-import { hasConfigDir, createConfigDir, configPath } from "../../files";
+import {
+  configDir,
+  hasConfigDir,
+  createConfigDir,
+  configPath,
+} from "../../files";
+import { formatCommand, formatFileTree } from "../../format";
 import * as flow from "../../flow";
 import { compileDefaultTemplate } from "./default-template";
 
@@ -36,4 +42,12 @@ export async function action(): Promise<string> {
   flow.spinner.stop(`Created ${templateRelativePath}`);
 
   return name;
+}
+
+export function afterAction(name: string) {
+  console.log("You can update your new templates here:\n");
+  console.log(formatFileTree([configDir, "templates", name]));
+
+  console.log("After that, you can run your template:");
+  console.log(formatCommand(`npx tsnew ${name}`));
 }

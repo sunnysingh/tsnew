@@ -8,8 +8,7 @@ import { text, select, isCancel, cancel } from "@clack/prompts";
 import * as flow from "../flow";
 import { templatesPath } from "../files";
 import { TemplateContext } from "../template-api";
-import { action as templateAction } from "./template/action";
-import { printInstructions } from "./template/instructions";
+import * as templateAction from "./template/action";
 
 const newTemplateAnswerValue = "__NEW_TEMPLATE__";
 
@@ -32,11 +31,11 @@ export function registerCommand(cli: CAC) {
       let selectedTemplate = templateName;
 
       if (!templateName) {
-        const selectedTemplate = await addSelectTemplateFlow();
+        selectedTemplate = await addSelectTemplateFlow();
         if (!selectedTemplate) return;
       }
 
-      if (!selectedTemplate) {
+      if (selectedTemplate === undefined) {
         flow.log.error("Unable to determine selected template.");
         flow.end();
         process.exit(1);
@@ -90,11 +89,11 @@ export function registerCommand(cli: CAC) {
 }
 
 async function continueWithTemplateCreatorFlow() {
-  const createdName = await templateAction();
+  const createdName = await templateAction.action();
 
   flow.end();
 
-  printInstructions(createdName);
+  templateAction.afterAction(createdName);
 }
 
 async function addSelectTemplateFlow(): Promise<string | undefined> {

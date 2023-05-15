@@ -1,8 +1,7 @@
 import type { CAC } from "cac";
 
 import * as flow from "../../flow";
-import { action } from "./action";
-import { printInstructions } from "./instructions";
+import { action, afterAction } from "./action";
 
 export function registerCommand(cli: CAC) {
   cli.command("template", "Create a new template").action(async () => {
@@ -12,6 +11,6 @@ export function registerCommand(cli: CAC) {
 
     flow.end();
 
-    printInstructions(name);
+    afterAction(name);
   });
 }
