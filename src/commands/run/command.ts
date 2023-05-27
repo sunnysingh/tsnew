@@ -46,19 +46,12 @@ export function registerCommand(cli: CAC) {
         foundTemplatePaths
       );
 
-      const templateContextInputName = await text({
-        message: `What is the name of this ${selectedTemplate}?`,
-      });
-
-      if (isCancel(templateContextInputName)) {
-        cancel("Operation cancelled.");
-        process.exit(0);
-      }
+      // TODO: Prompt based on input defined in template.
 
       flow.spinner.start(`Running ${selectedTemplate} template`);
 
-      const templateContext: TemplateContext = {
-        input: { name: templateContextInputName },
+      const templateContext: TemplateContext<{}> = {
+        input: {},
       };
 
       await writeTemplateFiles(bundledTemplateFiles, {

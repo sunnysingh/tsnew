@@ -4,7 +4,7 @@ import { bundleRequire } from "bundle-require";
 import { globby } from "globby";
 
 import { readme } from "./default-templates";
-import { TemplateContext } from "./template-api";
+import type { Template, TemplateContext } from "./template-api";
 
 export const configDir = ".tsnew";
 
@@ -61,8 +61,8 @@ export async function bundleTemplatePaths(
 }
 
 export interface TemplateWriterConfig {
-  templateContext: TemplateContext;
   cwd: string;
+  templateContext: TemplateContext<any>;
   onCreated: (relativeFilePath: string) => void;
 }
 
@@ -71,11 +71,13 @@ export async function writeTemplateFiles(
   config: TemplateWriterConfig
 ) {
   for (const { mod } of bundledTemplateFiles) {
-    const compiled = await (mod as any).default(config.templateContext);
-    const compiledPath = path.join(config.cwd, path.normalize(compiled.path));
+    const template: Template = await (mod as any).default;
+    const templatePath = template.path(config.templateContext);
+    const templateContent = template.content(config.templateContext);
+    const compiledPath = path.join(config.cwd, path.normalize(templatePath));
 
     await mkdir(path.dirname(compiledPath), { recursive: true });
-    await writeFile(compiledPath, compiled.content, "utf-8");
+    await writeFile(compiledPath, templateContent, "utf-8");
 
     config.onCreated(path.relative(config.cwd, compiledPath));
   }
