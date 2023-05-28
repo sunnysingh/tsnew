@@ -63,14 +63,15 @@ export async function bundleTemplatePaths(
 export interface TemplateWriterConfig {
   cwd: string;
   getInput: (template: Template) => Promise<Record<string, unknown>>;
-  onBeforeSave: () => void;
-  onCreated: (relativeFilePath: string) => void;
+  onSave: (relativeFilePath: string) => void;
 }
 
 export async function writeTemplateFiles(
   bundledTemplateFiles: BundleRequireResult[],
   config: TemplateWriterConfig
 ) {
+  const pendingFiles: string[][] = [];
+
   for (const { mod } of bundledTemplateFiles) {
     const template: Template = await (mod as any).default;
     const templateContext: any = { input: await config.getInput(template) };
@@ -78,11 +79,12 @@ export async function writeTemplateFiles(
     const templateContent = await template.content(templateContext);
     const compiledPath = path.join(config.cwd, path.normalize(templatePath));
 
-    config.onBeforeSave();
+    pendingFiles.push([compiledPath, templateContent]);
+  }
 
-    await mkdir(path.dirname(compiledPath), { recursive: true });
-    await writeFile(compiledPath, templateContent, "utf-8");
-
-    config.onCreated(path.relative(config.cwd, compiledPath));
+  for (const [filePath, content] of pendingFiles) {
+    await mkdir(path.dirname(filePath), { recursive: true });
+    await writeFile(filePath, content, "utf-8");
+    config.onSave(path.relative(config.cwd, filePath));
   }
 }

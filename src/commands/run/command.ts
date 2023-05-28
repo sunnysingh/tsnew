@@ -48,6 +48,9 @@ export function registerCommand(cli: CAC) {
 
       await writeTemplateFiles(bundledTemplateFiles, {
         cwd: process.cwd(),
+        onSave(relativeFilePath) {
+          flow.log.info(`Created ${relativeFilePath}`);
+        },
         async getInput(template: Template) {
           if (!template.input) return {};
 
@@ -58,32 +61,28 @@ export function registerCommand(cli: CAC) {
             if (inputValue.type === "text") {
               promptsGroup[inputName] = () =>
                 prompts.text({ message: inputValue.message });
+              return promptsGroup;
             }
 
             if (inputValue.type === "confirm") {
               promptsGroup[inputName] = () =>
                 prompts.confirm({ message: inputValue.message });
+              return promptsGroup;
             }
 
-            return promptsGroup;
+            throw new Error(`Unknown input type: ${inputValue.type}`);
           }, {});
 
-          return prompts.group(inputPrompts, {
+          const inputAnswers = await prompts.group(inputPrompts, {
             onCancel: () => {
               prompts.cancel("Operation cancelled.");
               process.exit(0);
             },
           });
-        },
-        onBeforeSave() {
-          flow.spinner.start(`Running ${selectedTemplate} template`);
-        },
-        onCreated(relativeFilePath) {
-          flow.log.info(`Created ${relativeFilePath}`);
+
+          return inputAnswers;
         },
       });
-
-      flow.spinner.stop(`Finished running ${selectedTemplate} template`);
 
       flow.end();
     });

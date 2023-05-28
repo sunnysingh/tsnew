@@ -13,6 +13,8 @@ type GetPromptTypes<Prompt extends Record<string, PromptType>> = {
     : undefined;
 };
 
+export type Input = Record<string, PromptType>;
+
 export interface Template<Prompt extends Record<string, PromptType> = never> {
   input?: Prompt;
   path: (context: {
