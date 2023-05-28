@@ -1,0 +1,110 @@
+name: Test
+
+on:
+  pull_request:
+    types: [opened, reopened, synchronize]
+    branches: [main]
+
+jobs:
+  setup:
+    name: '🚜 Set up environment'
+    runs-on: ubuntu-22.04
+    steps:
+      - uses: actions/checkout@v3
+      - uses: ./.github/actions/setup-environment
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+  formatcheck:
+    needs: setup
+    name: '🌈 Check formatting'
+    runs-on: ubuntu-22.04
+    steps:
+      - uses: actions/checkout@v3
+      - id: setup-environment
+        uses: ./.github/actions/setup-environment
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+      - name: Format
+        shell: bash
+        run: npm run formatcheck
+
+  typecheck:
+    needs: setup
+    name: '🛡️ Check types'
+    runs-on: ubuntu-22.04
+    steps:
+      - uses: actions/checkout@v3
+      - id: setup-environment
+        uses: ./.github/actions/setup-environment
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+      - name: Typecheck
+        shell: bash
+        run: npm run typecheck
+
+  lint:
+    needs: setup
+    name: '🧼 Lint code'
+    runs-on: ubuntu-22.04
+    steps:
+      - uses: actions/checkout@v3
+      - id: setup-environment
+        uses: ./.github/actions/setup-environment
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+      - name: Lint
+        shell: bash
+        run: npm run lint
+
+  coverage:
+    needs: setup
+    name: '🧪 Test and coverage'
+    runs-on: ubuntu-22.04
+    steps:
+      - uses: actions/checkout@v3
+      - id: setup-environment
+        uses: ./.github/actions/setup-environment
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+      - name: Coverage
+        shell: bash
+        run: npm run coverage
+
+  build:
+    needs: setup
+    name: '🛠️ Build'
+    runs-on: ubuntu-22.04
+    steps:
+      - uses: actions/checkout@v3
+      - id: setup-environment
+        uses: ./.github/actions/setup-environment
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+      - name: Build
+        shell: bash
+        run: npm run build
+
+  required:
+    name: '🚦 Check required jobs'
+    if: ${{ always() }}
+    needs:
+      - setup
+      - typecheck
+      - formatcheck
+      - lint
+      - coverage
+      - build
+    runs-on: ubuntu-22.04
+    steps:
+      - name: Check
+        shell: bash
+        run: |
+          if [[ "${{ contains(needs.*.result, 'failure') }}" == "true" ]]
+          then
+            echo "🔴 Failed at least one required check."
+            exit 1
+          fi
+
+          echo "🟢 Passed all required checks."
+          exit 0
