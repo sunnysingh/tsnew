@@ -57,9 +57,9 @@ jobs:
         shell: bash
         run: npm run coverage
 
-  build:
+  build-and-lint:
     needs: setup
-    name: '🛠️ Build'
+    name: '🛠 Build and lint'
     runs-on: ubuntu-22.04
     steps:
       - uses: actions/checkout@v3
@@ -70,17 +70,6 @@ jobs:
       - name: Build
         shell: bash
         run: npm run build
-
-  lint:
-    needs: build
-    name: '🧼 Lint code'
-    runs-on: ubuntu-22.04
-    steps:
-      - uses: actions/checkout@v3
-      - id: setup-environment
-        uses: ./.github/actions/setup-environment
-        with:
-          token: ${{ secrets.GITHUB_TOKEN }}
       - name: Lint
         shell: bash
         run: npm run lint
@@ -92,9 +81,8 @@ jobs:
       - setup
       - typecheck
       - formatcheck
-      - lint
       - coverage
-      - build
+      - build-and-lint
     runs-on: ubuntu-22.04
     steps:
       - name: Check
