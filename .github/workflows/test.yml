@@ -43,20 +43,6 @@ jobs:
         shell: bash
         run: npm run typecheck
 
-  lint:
-    needs: setup
-    name: '🧼 Lint code'
-    runs-on: ubuntu-22.04
-    steps:
-      - uses: actions/checkout@v3
-      - id: setup-environment
-        uses: ./.github/actions/setup-environment
-        with:
-          token: ${{ secrets.GITHUB_TOKEN }}
-      - name: Lint
-        shell: bash
-        run: npm run lint
-
   coverage:
     needs: setup
     name: '🧪 Test and coverage'
@@ -84,6 +70,20 @@ jobs:
       - name: Build
         shell: bash
         run: npm run build
+
+  lint:
+    needs: build
+    name: '🧼 Lint code'
+    runs-on: ubuntu-22.04
+    steps:
+      - uses: actions/checkout@v3
+      - id: setup-environment
+        uses: ./.github/actions/setup-environment
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+      - name: Lint
+        shell: bash
+        run: npm run lint
 
   required:
     name: '🚦 Check required jobs'
