@@ -1,13 +1,13 @@
-import { readdir } from "fs/promises";
-import { select, isCancel, cancel } from "@clack/prompts";
+import { readdir } from 'fs/promises';
+import { select, isCancel, cancel } from '@clack/prompts';
 
-import { templatesPath } from "../../files";
-import * as flow from "../../flow";
-import * as templateAction from "../template/action";
+import { templatesPath } from '../../files';
+import * as flow from '../../flow';
+import * as templateAction from '../template/action';
 
-const RESERVED_ANSWER_ADD_TEMPLATE = "__RESERVED_ANSWER_ADD_TEMPLATE__";
+const RESERVED_ANSWER_ADD_TEMPLATE = '__RESERVED_ANSWER_ADD_TEMPLATE__';
 const RESERVED_OPTION_ADD_TEMPLATE = {
-  label: "add a new template",
+  label: 'add a new template',
   value: RESERVED_ANSWER_ADD_TEMPLATE,
 };
 
@@ -25,12 +25,12 @@ export async function promptTemplateSelection(): Promise<string | undefined> {
   }));
 
   const response = await select({
-    message: "Which template do you want to run?",
+    message: 'Which template do you want to run?',
     options: [...templateOptions, RESERVED_OPTION_ADD_TEMPLATE],
   });
 
   if (isCancel(response)) {
-    cancel("Operation cancelled.");
+    cancel('Operation cancelled.');
     process.exit(0);
   }
 

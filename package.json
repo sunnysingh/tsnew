@@ -15,6 +15,7 @@
   "scripts": {
     "dev": "tsup --watch",
     "build": "tsup",
+    "format": "prettier --write .",
     "release": "auto shipit"
   },
   "repository": {
@@ -42,6 +43,7 @@
     "@auto-it/released": "^10.46.0",
     "@types/node": "^20.1.4",
     "auto": "^10.46.0",
+    "prettier": "^2.8.8",
     "tsup": "^6.7.0",
     "typescript": "^5.0.4"
   },

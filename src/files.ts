@@ -1,20 +1,20 @@
-import path from "node:path";
-import { stat, mkdir, writeFile } from "node:fs/promises";
-import { bundleRequire } from "bundle-require";
-import { globby } from "globby";
+import path from 'node:path';
+import { stat, mkdir, writeFile } from 'node:fs/promises';
+import { bundleRequire } from 'bundle-require';
+import { globby } from 'globby';
 
-import { readme } from "./default-templates";
-import type { Template } from "./template-api";
+import { readme } from './default-templates';
+import type { Template } from './template-api';
 
-export const configDir = ".tsnew";
+export const configDir = '.tsnew';
 
 export const configPath = path.join(process.cwd(), configDir);
 
-export const templatesDir = "templates";
+export const templatesDir = 'templates';
 
 export const templatesPath = path.join(configPath, templatesDir);
 
-export const readmePath = path.join(configPath, "README.md");
+export const readmePath = path.join(configPath, 'README.md');
 
 export async function hasConfigDir(): Promise<boolean> {
   try {
@@ -38,9 +38,9 @@ export async function hasTemplatesDir(): Promise<boolean> {
 }
 
 export async function findTemplatePaths(
-  baseTemplatePath: string
+  baseTemplatePath: string,
 ): Promise<string[]> {
-  return globby("**/*.template.ts", {
+  return globby('**/*.template.ts', {
     cwd: baseTemplatePath,
   });
 }
@@ -49,14 +49,14 @@ type BundleRequireResult = Awaited<ReturnType<typeof bundleRequire>>;
 
 export async function bundleTemplatePaths(
   baseTemplatePath: string,
-  templatePaths: string[]
+  templatePaths: string[],
 ): Promise<BundleRequireResult[]> {
   return Promise.all(
     templatePaths.map((templatePath) =>
       bundleRequire({
         filepath: path.join(baseTemplatePath, path.normalize(templatePath)),
-      })
-    )
+      }),
+    ),
   );
 }
 
@@ -68,7 +68,7 @@ export interface TemplateWriterConfig {
 
 export async function writeTemplateFiles(
   bundledTemplateFiles: BundleRequireResult[],
-  config: TemplateWriterConfig
+  config: TemplateWriterConfig,
 ) {
   const pendingFileEntries: [string, string][] = [];
 
@@ -84,7 +84,7 @@ export async function writeTemplateFiles(
 
   for (const [filePath, content] of pendingFileEntries) {
     await mkdir(path.dirname(filePath), { recursive: true });
-    await writeFile(filePath, content, "utf-8");
+    await writeFile(filePath, content, 'utf-8');
     config.onSave(path.relative(config.cwd, filePath));
   }
 }

@@ -23,15 +23,15 @@ npx tsnew
 Templates are defined in `.template.ts` files:
 
 ```ts
-import { defineTemplate } from "tsnew";
+import { defineTemplate } from 'tsnew';
 
 export default defineTemplate({
   input: {
-    name: { type: "text", message: "What is the name of this feature?" },
-    jsx: { type: "confirm", message: "Will this feature have components?" },
+    name: { type: 'text', message: 'What is the name of this feature?' },
+    jsx: { type: 'confirm', message: 'Will this feature have components?' },
   },
   path: async ({ input }) =>
-    `features/${input.name}.${input.jsx ? "tsx" : "ts"}`,
+    `features/${input.name}.${input.jsx ? 'tsx' : 'ts'}`,
   content: async ({ input }) =>
     `// Starter file for the ${input.name} feature.`,
 });

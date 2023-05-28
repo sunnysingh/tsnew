@@ -1,12 +1,12 @@
 #!/usr/bin/env node
 
-import { cac } from "cac";
+import { cac } from 'cac';
 
-import { version } from "../package.json";
-import * as commands from "./commands";
+import { version } from '../package.json';
+import * as commands from './commands';
 
 void (async function main() {
-  const cli = cac("tsnew");
+  const cli = cac('tsnew');
 
   commands.run.registerCommand(cli);
   commands.template.registerCommand(cli);

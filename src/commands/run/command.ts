@@ -1,21 +1,21 @@
-import path from "node:path";
-import type { CAC } from "cac";
-import * as prompts from "@clack/prompts";
+import path from 'node:path';
+import type { CAC } from 'cac';
+import * as prompts from '@clack/prompts';
 
-import * as flow from "../../flow";
+import * as flow from '../../flow';
 import {
   bundleTemplatePaths,
   findTemplatePaths,
   hasTemplatesDir,
   templatesPath,
   writeTemplateFiles,
-} from "../../files";
-import type { Template, PromptType } from "../../template-api";
-import * as templatePrompts from "./template-prompts";
+} from '../../files';
+import type { Template, PromptType } from '../../template-api';
+import * as templatePrompts from './template-prompts';
 
 export function registerCommand(cli: CAC) {
   cli
-    .command("[templateName]", "Run template")
+    .command('[templateName]', 'Run template')
     .action(async (templateName?: string) => {
       flow.start();
 
@@ -34,7 +34,7 @@ export function registerCommand(cli: CAC) {
       }
 
       if (selectedTemplate === undefined) {
-        flow.log.error("Unable to determine selected template.");
+        flow.log.error('Unable to determine selected template.');
         flow.end();
         process.exit(1);
       }
@@ -43,7 +43,7 @@ export function registerCommand(cli: CAC) {
       const foundTemplatePaths = await findTemplatePaths(selectedTemplatePath);
       const bundledTemplateFiles = await bundleTemplatePaths(
         selectedTemplatePath,
-        foundTemplatePaths
+        foundTemplatePaths,
       );
 
       const inputCache: Record<string, unknown> = {};
@@ -71,13 +71,13 @@ export function registerCommand(cli: CAC) {
 
             pendingCacheKeys[index] = cacheKey;
 
-            if (inputValue.type === "text") {
+            if (inputValue.type === 'text') {
               promptsGroup[inputName] = () =>
                 prompts.text({ message: inputValue.message });
               return promptsGroup;
             }
 
-            if (inputValue.type === "confirm") {
+            if (inputValue.type === 'confirm') {
               promptsGroup[inputName] = () =>
                 prompts.confirm({ message: inputValue.message });
               return promptsGroup;
@@ -88,7 +88,7 @@ export function registerCommand(cli: CAC) {
 
           const inputAnswers = await prompts.group(inputPrompts, {
             onCancel: () => {
-              prompts.cancel("Operation cancelled.");
+              prompts.cancel('Operation cancelled.');
               process.exit(0);
             },
           });

@@ -1,11 +1,11 @@
-import { dim, bold } from "colorette";
-import { AsciiTree } from "oo-ascii-tree";
-import boxen from "boxen";
+import { dim, bold } from 'colorette';
+import { AsciiTree } from 'oo-ascii-tree';
+import boxen from 'boxen';
 
 export function formatCommand(command: string): string {
-  return boxen(`${dim("$")} ${bold(command)}`, {
+  return boxen(`${dim('$')} ${bold(command)}`, {
     padding: { left: 1, right: 1 },
-    borderStyle: "round",
+    borderStyle: 'round',
     dimBorder: true,
   });
 }
