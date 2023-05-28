@@ -2,58 +2,41 @@
   "name": "tsnew",
   "version": "0.6.0",
   "description": "Code scaffolding tool for TypeScript projects.",
-  "type": "module",
-  "main": "dist/index.cjs",
-  "exports": {
-    ".": "./dist/index.js"
-  },
-  "module": "dist/index.js",
-  "types": "dist/index.d.ts",
-  "bin": {
-    "tsnew": "dist/cli.js"
-  },
-  "files": [
-    "dist"
-  ],
-  "scripts": {
-    "dev": "tsup --watch",
-    "build": "tsup",
-    "format": "prettier --write .",
-    "formatcheck": "prettier --check .",
-    "typecheck": "tsc --noEmit",
-    "lint": "echo 'Not implemented yet.'; exit 0",
-    "coverage": "echo 'Not implemented yet.'; exit 0",
-    "test": "echo 'Not implemented yet.'; exit 0",
-    "release": "auto shipit"
-  },
+  "homepage": "https://tsnew.dev/",
+  "author": "Sunny Singh <me@sunnysingh.io> (https://sunnysingh.io/)",
+  "license": "MIT",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/sunnysingh/tsnew.git"
   },
+  "bugs": {
+    "url": "https://github.com/sunnysingh/tsnew/issues"
+  },
+  "type": "module",
+  "main": "./dist/index.cjs",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "require": "./dist/index.cjs",
+      "import": "./dist/index.js",
+      "default": "./dist/index.js"
+    }
+  },
+  "bin": {
+    "tsnew": "./dist/cli.js"
+  },
+  "files": [
+    "dist"
+  ],
   "keywords": [
     "typescript",
     "scaffold",
     "generator"
   ],
-  "author": "Sunny Singh <me@sunnysingh.io> (https://sunnysingh.io/)",
-  "license": "MIT",
-  "bugs": {
-    "url": "https://github.com/sunnysingh/tsnew/issues"
-  },
-  "homepage": "https://github.com/sunnysingh/tsnew#readme",
   "peerDependencies": {
     "typescript": "5.x"
-  },
-  "devDependencies": {
-    "@auto-it/all-contributors": "^10.46.0",
-    "@auto-it/first-time-contributor": "^10.46.0",
-    "@auto-it/npm": "^10.46.0",
-    "@auto-it/released": "^10.46.0",
-    "@types/node": "^20.1.4",
-    "auto": "^10.46.0",
-    "prettier": "^2.8.8",
-    "tsup": "^6.7.0",
-    "typescript": "^5.0.4"
   },
   "dependencies": {
     "@clack/prompts": "^0.6.3",
@@ -65,5 +48,28 @@
     "globby": "^13.1.4",
     "oo-ascii-tree": "^1.81.0",
     "tree-node-cli": "^1.6.0"
+  },
+  "devDependencies": {
+    "@auto-it/all-contributors": "^10.46.0",
+    "@auto-it/first-time-contributor": "^10.46.0",
+    "@auto-it/npm": "^10.46.0",
+    "@auto-it/released": "^10.46.0",
+    "@types/node": "^20.1.4",
+    "auto": "^10.46.0",
+    "prettier": "^2.8.8",
+    "publint": "^0.1.12",
+    "tsup": "^6.7.0",
+    "typescript": "^5.0.4"
+  },
+  "scripts": {
+    "dev": "tsup --watch",
+    "build": "tsup",
+    "format": "prettier --write .",
+    "formatcheck": "prettier --check .",
+    "typecheck": "tsc --noEmit",
+    "lint": "publint --strict",
+    "coverage": "echo 'Not implemented yet.'; exit 0",
+    "test": "echo 'Not implemented yet.'; exit 0",
+    "release": "auto shipit"
   }
 }
