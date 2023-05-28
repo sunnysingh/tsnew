@@ -1,0 +1,15 @@
+{
+  "name": "site",
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build && next export"
+  },
+  "dependencies": {
+    "next": "^13.4.4",
+    "nextra": "^2.6.1",
+    "nextra-theme-docs": "^2.6.1",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0"
+  },
+  "private": true
+}
