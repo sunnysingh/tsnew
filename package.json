@@ -14,7 +14,8 @@
   ],
   "scripts": {
     "dev": "tsup --watch",
-    "build": "tsup"
+    "build": "tsup",
+    "release": "auto shipit"
   },
   "repository": {
     "type": "git",
@@ -31,8 +32,16 @@
     "url": "https://github.com/sunnysingh/tsnew/issues"
   },
   "homepage": "https://github.com/sunnysingh/tsnew#readme",
+  "peerDependencies": {
+    "typescript": "5.x"
+  },
   "devDependencies": {
+    "@auto-it/all-contributors": "^10.46.0",
+    "@auto-it/first-time-contributor": "^10.46.0",
+    "@auto-it/npm": "^10.46.0",
+    "@auto-it/released": "^10.46.0",
     "@types/node": "^20.1.4",
+    "auto": "^10.46.0",
     "tsup": "^6.7.0",
     "typescript": "^5.0.4"
   },
