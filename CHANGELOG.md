@@ -1,3 +1,15 @@
+# v0.6.1 (Sun May 28 2023)
+
+#### 🧰 Bug Fix
+
+- Set up package linting and resolve exports error [#3](https://github.com/sunnysingh/tsnew/pull/3) ([@sunnysingh](https://github.com/sunnysingh))
+
+#### Authors: 1
+
+- Sunny Singh ([@sunnysingh](https://github.com/sunnysingh))
+
+---
+
 # v0.6.0 (Sun May 28 2023)
 
 #### 🚀 Feature Enhancement
