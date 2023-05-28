@@ -1,11 +1,10 @@
 import path from "node:path";
 import { stat, mkdir, writeFile } from "node:fs/promises";
-import * as prompts from "@clack/prompts";
 import { bundleRequire } from "bundle-require";
 import { globby } from "globby";
 
 import { readme } from "./default-templates";
-import type { Template, TemplateContext } from "./template-api";
+import type { Template } from "./template-api";
 
 export const configDir = ".tsnew";
 
@@ -74,8 +73,7 @@ export async function writeTemplateFiles(
 ) {
   for (const { mod } of bundledTemplateFiles) {
     const template: Template = await (mod as any).default;
-    const input = await config.getInput(template);
-    const templateContext: TemplateContext<any> = { input };
+    const templateContext: any = { input: await config.getInput(template) };
     const templatePath = await template.path(templateContext);
     const templateContent = await template.content(templateContext);
     const compiledPath = path.join(config.cwd, path.normalize(templatePath));

@@ -10,7 +10,7 @@ import {
   templatesPath,
   writeTemplateFiles,
 } from "../../files";
-import { Template } from "../../template-api";
+import type { Template, PromptType } from "../../template-api";
 import * as templatePrompts from "./template-prompts";
 
 export function registerCommand(cli: CAC) {
@@ -51,7 +51,8 @@ export function registerCommand(cli: CAC) {
         async getInput(template: Template) {
           if (!template.input) return {};
 
-          const inputPrompts = Object.entries(template.input).reduce<
+          const input = template.input as Record<string, PromptType>;
+          const inputPrompts = Object.entries(input).reduce<
             Record<string, () => Promise<unknown | symbol>>
           >((promptsGroup, [inputName, inputValue]) => {
             if (inputValue.type === "text") {

@@ -1,6 +1,6 @@
-type ExpandType<T> = { [KeyType in keyof T]: T[KeyType] } & {};
+type ExpandType<T> = { [Key in keyof T]: T[Key] } & {};
 
-interface PromptType {
+export interface PromptType {
   type: "text" | "confirm";
   message: string;
 }
@@ -13,24 +13,18 @@ type GetPromptTypes<Prompt extends Record<string, PromptType>> = {
     : undefined;
 };
 
-export interface TemplateContext<Input> {
-  input: Input;
-}
-
-export interface Template<
-  Prompt extends Record<string, PromptType> = Record<string, PromptType>
-> {
+export interface Template<Prompt extends Record<string, PromptType> = never> {
   input?: Prompt;
-  path: (
-    context: ExpandType<TemplateContext<ExpandType<GetPromptTypes<Prompt>>>>
-  ) => string | Promise<string>;
-  content: (
-    context: ExpandType<TemplateContext<ExpandType<GetPromptTypes<Prompt>>>>
-  ) => string | Promise<string>;
+  path: (context: {
+    input: ExpandType<GetPromptTypes<Prompt>>;
+  }) => string | Promise<string>;
+  content: (context: {
+    input: ExpandType<GetPromptTypes<Prompt>>;
+  }) => string | Promise<string>;
 }
 
-export function defineTemplate<const Prompt extends Record<string, PromptType>>(
-  template: Template<Prompt>
-) {
+export function defineTemplate<
+  const Prompt extends Record<string, PromptType> = never
+>(template: Template<Prompt>) {
   return template;
 }
