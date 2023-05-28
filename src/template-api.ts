@@ -23,10 +23,10 @@ export interface Template<
   input?: Prompt;
   path: (
     context: ExpandType<TemplateContext<ExpandType<GetPromptTypes<Prompt>>>>
-  ) => string;
+  ) => string | Promise<string>;
   content: (
     context: ExpandType<TemplateContext<ExpandType<GetPromptTypes<Prompt>>>>
-  ) => string;
+  ) => string | Promise<string>;
 }
 
 export function defineTemplate<const Prompt extends Record<string, PromptType>>(

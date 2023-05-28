@@ -76,8 +76,8 @@ export async function writeTemplateFiles(
     const template: Template = await (mod as any).default;
     const input = await config.getInput(template);
     const templateContext: TemplateContext<any> = { input };
-    const templatePath = template.path(templateContext);
-    const templateContent = template.content(templateContext);
+    const templatePath = await template.path(templateContext);
+    const templateContent = await template.content(templateContext);
     const compiledPath = path.join(config.cwd, path.normalize(templatePath));
 
     config.onBeforeSave();
