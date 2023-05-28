@@ -70,7 +70,7 @@ export async function writeTemplateFiles(
   bundledTemplateFiles: BundleRequireResult[],
   config: TemplateWriterConfig
 ) {
-  const pendingFiles: string[][] = [];
+  const pendingFileEntries: [string, string][] = [];
 
   for (const { mod } of bundledTemplateFiles) {
     const template: Template = await (mod as any).default;
@@ -79,10 +79,10 @@ export async function writeTemplateFiles(
     const templateContent = await template.content(templateContext);
     const compiledPath = path.join(config.cwd, path.normalize(templatePath));
 
-    pendingFiles.push([compiledPath, templateContent]);
+    pendingFileEntries.push([compiledPath, templateContent]);
   }
 
-  for (const [filePath, content] of pendingFiles) {
+  for (const [filePath, content] of pendingFileEntries) {
     await mkdir(path.dirname(filePath), { recursive: true });
     await writeFile(filePath, content, "utf-8");
     config.onSave(path.relative(config.cwd, filePath));

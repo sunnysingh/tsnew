@@ -46,6 +46,8 @@ export function registerCommand(cli: CAC) {
         foundTemplatePaths
       );
 
+      const inputCache: Record<string, unknown> = {};
+
       await writeTemplateFiles(bundledTemplateFiles, {
         cwd: process.cwd(),
         onSave(relativeFilePath) {
@@ -54,10 +56,21 @@ export function registerCommand(cli: CAC) {
         async getInput(template: Template) {
           if (!template.input) return {};
 
+          const pendingCacheKeys: (string | undefined)[] = [];
+          const cachedInputEntries: [string, unknown][] = [];
           const input = template.input as Record<string, PromptType>;
           const inputPrompts = Object.entries(input).reduce<
             Record<string, () => Promise<unknown | symbol>>
-          >((promptsGroup, [inputName, inputValue]) => {
+          >((promptsGroup, [inputName, inputValue], index) => {
+            const cacheKey = `${inputName}|${inputValue.type}|${inputValue.message}`;
+
+            if (inputCache[cacheKey]) {
+              cachedInputEntries.push([inputName, inputCache[cacheKey]]);
+              return promptsGroup;
+            }
+
+            pendingCacheKeys[index] = cacheKey;
+
             if (inputValue.type === "text") {
               promptsGroup[inputName] = () =>
                 prompts.text({ message: inputValue.message });
@@ -80,7 +93,12 @@ export function registerCommand(cli: CAC) {
             },
           });
 
-          return inputAnswers;
+          Object.values(inputAnswers).forEach((answer, index) => {
+            const cacheKey = pendingCacheKeys[index];
+            if (cacheKey) inputCache[cacheKey] = answer;
+          });
+
+          return { ...Object.fromEntries(cachedInputEntries), ...inputAnswers };
         },
       });
 
