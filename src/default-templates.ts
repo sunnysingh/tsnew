@@ -16,8 +16,13 @@ export const compileStarterTemplate = (name: string) =>
   `
 import { defineTemplate } from "tsnew";
 
-export default defineTemplate((context) => ({
-  path: \`${name}/\${context.input.name}.ts\`,
-  content: \`// This is a starter file for the \${context.input.name} ${name}!\`,
-}));
+export default defineTemplate({
+  input: {
+    name: { type: "text", message: "What is the name of this ${name}?" },
+  },
+  path: async ({ input }) =>
+    \`${name}/\${input.name}.ts\`,
+  content: async ({ input }) =>
+    \`// Starter file for the \${input.name} ${name}.\`,
+});
 `.trim();
