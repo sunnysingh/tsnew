@@ -1,5 +1,6 @@
 import path from "node:path";
 import { stat, mkdir, writeFile } from "node:fs/promises";
+import * as prompts from "@clack/prompts";
 import { bundleRequire } from "bundle-require";
 import { globby } from "globby";
 
@@ -62,7 +63,8 @@ export async function bundleTemplatePaths(
 
 export interface TemplateWriterConfig {
   cwd: string;
-  templateContext: TemplateContext<any>;
+  getInput: (template: Template) => Promise<Record<string, unknown>>;
+  onBeforeSave: () => void;
   onCreated: (relativeFilePath: string) => void;
 }
 
@@ -72,9 +74,13 @@ export async function writeTemplateFiles(
 ) {
   for (const { mod } of bundledTemplateFiles) {
     const template: Template = await (mod as any).default;
-    const templatePath = template.path(config.templateContext);
-    const templateContent = template.content(config.templateContext);
+    const input = await config.getInput(template);
+    const templateContext: TemplateContext<any> = { input };
+    const templatePath = template.path(templateContext);
+    const templateContent = template.content(templateContext);
     const compiledPath = path.join(config.cwd, path.normalize(templatePath));
+
+    config.onBeforeSave();
 
     await mkdir(path.dirname(compiledPath), { recursive: true });
     await writeFile(compiledPath, templateContent, "utf-8");

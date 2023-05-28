@@ -1,9 +1,8 @@
 import path from "node:path";
 import type { CAC } from "cac";
-import { text, isCancel, cancel } from "@clack/prompts";
+import * as prompts from "@clack/prompts";
 
 import * as flow from "../../flow";
-import type { TemplateContext } from "../../template-api";
 import {
   bundleTemplatePaths,
   findTemplatePaths,
@@ -11,6 +10,7 @@ import {
   templatesPath,
   writeTemplateFiles,
 } from "../../files";
+import { Template } from "../../template-api";
 import * as templatePrompts from "./template-prompts";
 
 export function registerCommand(cli: CAC) {
@@ -46,17 +46,37 @@ export function registerCommand(cli: CAC) {
         foundTemplatePaths
       );
 
-      // TODO: Prompt based on input defined in template.
-
-      flow.spinner.start(`Running ${selectedTemplate} template`);
-
-      const templateContext: TemplateContext<{}> = {
-        input: {},
-      };
-
       await writeTemplateFiles(bundledTemplateFiles, {
         cwd: process.cwd(),
-        templateContext,
+        async getInput(template: Template) {
+          if (!template.input) return {};
+
+          const inputPrompts = Object.entries(template.input).reduce<
+            Record<string, () => Promise<unknown | symbol>>
+          >((promptsGroup, [inputName, inputValue]) => {
+            if (inputValue.type === "text") {
+              promptsGroup[inputName] = () =>
+                prompts.text({ message: inputValue.message });
+            }
+
+            if (inputValue.type === "confirm") {
+              promptsGroup[inputName] = () =>
+                prompts.confirm({ message: inputValue.message });
+            }
+
+            return promptsGroup;
+          }, {});
+
+          return prompts.group(inputPrompts, {
+            onCancel: () => {
+              prompts.cancel("Operation cancelled.");
+              process.exit(0);
+            },
+          });
+        },
+        onBeforeSave() {
+          flow.spinner.start(`Running ${selectedTemplate} template`);
+        },
         onCreated(relativeFilePath) {
           flow.log.info(`Created ${relativeFilePath}`);
         },
