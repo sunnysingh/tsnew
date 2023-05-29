@@ -1,7 +1,5 @@
+> **Warning** TSNew is experimental. Avoid usage unless you're providing feedback.
+
 ![TSNew - TypeScript Code Generator](./site/public/cover.png)
-
----
-
-> 🚧 **COMING SOON** - Experimental stage. Not ready for public usage yet.
 
 **[View Docs](https://tsnew.dev/)**

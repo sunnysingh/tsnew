@@ -1,5 +1,7 @@
 node_modules
 coverage
 dist
+.next
 out
 package-lock.json
+CHANGELOG.md

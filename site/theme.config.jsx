@@ -3,14 +3,26 @@ import { useConfig } from 'nextra-theme-docs';
 import { Logo } from './components/Logo';
 
 export default {
-  primaryHue: 175,
   logo: <Logo size={130} />,
   docsRepositoryBase: 'https://github.com/sunnysingh/tsnew/blob/main/site',
   project: {
     link: 'https://github.com/sunnysingh/tsnew',
   },
+  banner: {
+    key: 'experimental-v0',
+    text: (
+      <strong>
+        🚧 TSNew is experimental. Avoid usage unless you're providing feedback.
+        🚧
+      </strong>
+    ),
+    dismissible: false,
+  },
   feedback: {
     content: null,
+  },
+  useNextSeoProps() {
+    return {};
   },
   head: () => {
     const { frontMatter } = useConfig();
@@ -26,7 +38,7 @@ export default {
         <meta property="og:url" content="https://tsnew.dev/" />
         <meta property="og:title" content="TSNew" />
         <meta property="og:description" content="TypeScript Code Generator" />
-        <meta property="og:image" content="/cover.png" />
+        <meta property="og:image" content="https://tsnew.dev/cover.png" />
 
         <meta property="twitter:card" content="summary_large_image" />
         <meta property="twitter:url" content="https://tsnew.dev/" />
@@ -35,7 +47,10 @@ export default {
           property="twitter:description"
           content="TypeScript Code Generator"
         />
-        <meta property="twitter:image" content="/cover.png" />
+        <meta
+          property="twitter:image:src"
+          content="https://tsnew.dev/cover.png"
+        />
 
         <link
           rel="apple-touch-icon"
@@ -62,7 +77,7 @@ export default {
     text: (
       <span>
         © {new Date().getFullYear()}{' '}
-        <a href="https://nextra.site" target="_blank">
+        <a href="https://sunnysingh.io/" target="_blank">
           Sunny Singh
         </a>
       </span>

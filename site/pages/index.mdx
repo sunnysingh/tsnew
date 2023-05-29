@@ -9,51 +9,57 @@ It makes teams more efficient while enforcing existing project patterns and deci
 
 ## Install the package
 
-Install the [tsnew package](https://www.npmjs.com/package/tsnew) as a dev dependency:
+Install the [tsnew package](https://www.npmjs.com/package/tsnew) as a **dev dependency** with your preferred package manager:
 
 <Tabs items={['npm', 'pnpm', 'yarn']}>
   <Tab>
-    {/* prettier-ignore */}
+    <CH.Code style={{ marginTop: 0 }}>
 
-    ```sh copy
+    ```sh
     npm install tsnew --save-dev
     ```
 
+    </CH.Code>
+
   </Tab>
   <Tab>
-    {/* prettier-ignore */}
+    <CH.Code style={{ marginTop: 0 }}>
 
-    ```sh copy
+    ```sh
     pnpm add tsnew --save-dev
     ```
 
+    </CH.Code>
+
   </Tab>
   <Tab>
-    {/* prettier-ignore */}
+    <CH.Code style={{ marginTop: 0 }}>
 
-    ```sh copy
+    ```sh
     yarn add tsnew --dev
     ```
 
+    </CH.Code>
+
   </Tab>
+
 </Tabs>
 
-<Callout emoji="💡">
-  Installing as a dev dependency helps to ensure that each project contributor
-  uses the same version.
-</Callout>
+### Why not a global installation?
+
+Installing as a dev dependency keeps a locked version scoped to your project, and provides the template API to define templates. If each developer installs TSNew globally, then they may run into issues across projects.
 
 ## Create a template
 
-Run the CLI to set up a basic template:
+Run the `npx tsnew` CLI to set up a basic template:
 
 ```sh
 npx tsnew
 ```
 
-**Example**
+**Example Run**
 
-```ansi
+```
 ┌  🆕 tsnew start
 │
 ▲  You don't have any templates.
@@ -83,7 +89,7 @@ After that, you can run your template:
 
 You can view and run available templates now:
 
-```sh copy
+```sh
 npx tsnew
 ```
 
@@ -99,98 +105,94 @@ For example, you can run `npx tsnew component` if you have a `component` templat
 
 The template API is simple yet powerful. We'll now walk through a more real world example.
 
-Let's say we have the following templates file structure:
+Let's say we have the following template files:
 
-```ansi
-.tsnew/
-└── templates/
-    └── component/
-        ├── input.ts
-        ├── component.template.ts
-        ├── test.template.ts
-        └── README.md
+<CH.Code rows={18}>
+
+```ts input.ts
+import type { Input } from 'tsnew';
+
+/**
+ * Prompt CLI for input data to use in templates.
+ */
+export const input = {
+  name: {
+    type: 'text',
+    message: 'What is the name of this component?',
+  },
+} satisfies Input;
 ```
 
-Let's take a look at those template sources:
+```ts component.template.ts
+import { defineTemplate } from 'tsnew';
 
-<Tabs items={['input.ts', 'component.template.ts', 'test.template.ts', 'README.md']}>
-<Tab>
-    ```ts copy
-    import type { Input } from 'tsnew';
+import { input } from './input';
 
-    export const input = {
-      name: {
-        type: "text",
-        message: "What is the name of this component?",
-      },
-    } satisfies Input;
-    ```
+/**
+ * Create a component file.
+ */
+export default defineTemplate({
+  input,
+  path: ({ input }) => `components/${input.name}/${input.name}.tsx`,
+  content: ({ input }) => `
+    export function ${input.name}() {
+      return <p>I am a component!</p>;
+    }
+  `,
+});
+```
 
-  </Tab>
-  <Tab>
-    ```ts copy
-    import { defineTemplate } from 'tsnew';
-    import { input } from './input';
+```ts test.template.ts
+import { defineTemplate } from 'tsnew';
 
-    export default defineTemplate({
-      input,
-      path: ({ input }) => `components/${input.name}/${input.name}.tsx`,
-      content: ({ input }) => `
-        export function ${input.name}() {
-          return <p>I am a component!</p>;
-        }
-      `,
+import { input } from './input';
+
+/**
+ * Create a unit test file.
+ */
+export default defineTemplate({
+  input,
+  path: ({ input }) => `components/${input.name}/${input.name}.test.tsx`,
+  content: ({ input }) => `
+    import { ${input.name} } from './${input.name}';
+
+    test('render component', () => {
+      throw new Error('Please add tests!');
     });
-    ```
+  `,
+});
+```
 
-  </Tab>
-  <Tab>
-    ```ts copy
-    import { defineTemplate } from 'tsnew';
-    import { input } from './input';
+```ts readme.template.ts
+import { defineTemplate } from 'tsnew';
 
-    export default defineTemplate({
-      input,
-      path: ({ input }) => `components/${input.name}/${input.name}.test.tsx`,
-      content: ({ input }) => `
-        import { ${input.name} } from './${input.name}';
+import { input } from './input';
 
-        test('render component', () => {
-          throw new Error('Please add tests!');
-        });
-      `,
-    });
-    ```
+/**
+ * Create a Markdown README file.
+ */
+export default defineTemplate({
+  input,
+  path: ({ input }) => `components/${input.name}/README.md`,
+  content: ({ input }) => `
+    # Component Docs for ${input.name}
+  `,
+});
+```
 
-  </Tab>
-  <Tab>
-    ```ts copy
-    import { defineTemplate } from 'tsnew';
-    import { input } from './input';
-
-    export default defineTemplate({
-      input,
-      path: ({ input }) => `components/${input.name}/README.md`,
-      content: ({ input }) => `
-        # Component Docs for ${input.name}
-      `,
-    });
-    ```
-
-  </Tab>
-</Tabs>
+</CH.Code>
 
 It would be tedious to keep prompting for the same input in each template, so the `input` is shared across multiple templates via imports. The [satisfies keyword](https://www.typescriptlang.org/docs/handbook/release-notes/typescript-4-9.html#the-satisfies-operator) is necessary because we want to retain the actual object type of the `input`. This way, when you attempt to use `input.name` it is known to be a valid string property.
 
 Alright, let's run our `component` template:
 
-```sh copy
+```sh
 npx tsnew component
 ```
 
-Let's say that we want to create a `Button` component:
+For this example, we'll create a `Button` component:
 
-```ansi
+```
 ┌  🆕 tsnew start
 │
 ◇  What is the name of this component?
@@ -207,35 +209,24 @@ Let's say that we want to create a `Button` component:
 
 Nice! The following files were created:
 
-```ansi
-components/
-└── Button/
-    ├── Button.tsx
-    ├── Button.test.tsx
-    └── README.md
+<CH.Code rows={5}>
+
+```tsx Button.tsx
+export function Button() {
+  return <p>I am a component!</p>;
+}
 ```
 
-<Tabs items={['Button.tsx', 'Button.test.tsx', 'README.md']}>
-  <Tab>
-    ```ts
-    export function Button() {
-      return <p>I am a component!</p>;
-    }
-    ```
-  </Tab>
-  <Tab>
-    ```ts
-    import { Button } from './Button';
+```tsx Button.test.tsx
+import { Button } from './Button';
 
-    test('render component', () => {
-      throw new Error('Please add tests!');
-    });
-    ```
+test('render component', () => {
+  throw new Error('Please add tests!');
+});
+```
 
-  </Tab>
-  <Tab>
-  ```md
-  # Component Docs for Button
-  ```
-  </Tab>
-</Tabs>
+```md README.md
+# Component Docs for Button
+```
+
+</CH.Code>
