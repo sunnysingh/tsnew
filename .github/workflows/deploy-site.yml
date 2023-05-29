@@ -25,7 +25,7 @@ jobs:
           cache: npm
           cache-dependency-path: package-lock.json
       - name: Install dependencies
-        run: npm clean-install --include dev --workspace site
+        run: npm clean-install --include dev
       - name: Build site
         run: npm run build --workspace site
       - uses: actions/upload-pages-artifact@v1
