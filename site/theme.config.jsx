@@ -20,6 +20,26 @@ export default {
         <title>
           {frontMatter.title ? `${frontMatter.title} | TSNew` : 'TSNew'}
         </title>
+        <meta name="description" content="TypeScript Code Generator">
+
+        <meta property="og:type" content="website" />
+        <meta property="og:url" content="https://tsnew.dev/" />
+        <meta property="og:title" content="TSNew" />
+        <meta
+          property="og:description"
+          content="TypeScript Code Generator"
+        />
+        <meta property="og:image" content="/cover.png" />
+
+        <meta property="twitter:card" content="summary_large_image" />
+        <meta property="twitter:url" content="https://tsnew.dev/" />
+        <meta property="twitter:title" content="TSNew" />
+        <meta
+          property="twitter:description"
+          content="TypeScript Code Generator"
+        />
+        <meta property="twitter:image" content="/cover.png" />
+
         <link
           rel="apple-touch-icon"
           sizes="180x180"
