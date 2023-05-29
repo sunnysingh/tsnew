@@ -1,3 +1,241 @@
-# Welcome to `tsnew`
+import { Callout } from 'nextra/components';
+import { Tab, Tabs } from 'nextra-theme-docs';
 
-Coming soon.
+# What is TSNew?
+
+TSNew is a strongly typed templating system to generate feature code.
+
+It makes teams more efficient while enforcing existing project patterns and decisions.
+
+## Install the package
+
+Install the [tsnew package](https://www.npmjs.com/package/tsnew) as a dev dependency:
+
+<Tabs items={['npm', 'pnpm', 'yarn']}>
+  <Tab>
+    {/* prettier-ignore */}
+
+    ```sh copy
+    npm install tsnew --save-dev
+    ```
+
+  </Tab>
+  <Tab>
+    {/* prettier-ignore */}
+
+    ```sh copy
+    pnpm add tsnew --save-dev
+    ```
+
+  </Tab>
+  <Tab>
+    {/* prettier-ignore */}
+
+    ```sh copy
+    yarn add tsnew --dev
+    ```
+
+  </Tab>
+</Tabs>
+
+<Callout emoji="💡">
+  Installing as a dev dependency helps to ensure that each project contributor
+  uses the same version.
+</Callout>
+
+## Create a template
+
+Run the CLI to set up a basic template:
+
+```sh
+npx tsnew
+```
+
+**Example**
+
+```ansi
+┌  🆕 tsnew start
+│
+▲  You don't have any templates.
+│
+●  Let's create your first one!
+│
+◇  What is the name of this template?
+│  component
+│
+◇  Created .tsnew/templates/component
+│
+└  🆕 tsnew end
+
+You can update your new templates here:
+
+.tsnew
+ └─┬ templates
+   └── component
+
+After that, you can run your template:
+╭───────────────────────╮
+│ $ npx tsnew component │
+╰───────────────────────╯
+```
+
+## Run the template
+
+You can view and run available templates now:
+
+```sh copy
+npx tsnew
+```
+
+If you don't want to select a template each time, you can also run a template right away:
+
+```
+npx tsnew <name>
+```
+
+For example, you can run `npx tsnew component` if you have a `component` template.
+
+## Customize your templates
+
+The template API is simple yet powerful. We'll now walk through a more real world example.
+
+Let's say we have the following templates file structure:
+
+```ansi
+.tsnew/
+└── templates/
+    └── component/
+        ├── input.ts
+        ├── component.template.ts
+        ├── test.template.ts
+        └── README.md
+```
+
+Let's take a look at those template sources:
+
+<Tabs items={['input.ts', 'component.template.ts', 'test.template.ts', 'README.md']}>
+<Tab>
+    ```ts copy
+    import type { Input } from 'tsnew';
+
+    export const input = {
+      name: {
+        type: "text",
+        message: "What is the name of this component?",
+      },
+    } satisfies Input;
+    ```
+
+  </Tab>
+  <Tab>
+    ```ts copy
+    import { defineTemplate } from 'tsnew';
+    import { input } from './input';
+
+    export default defineTemplate({
+      input,
+      path: ({ input }) => `components/${input.name}/${input.name}.tsx`,
+      content: ({ input }) => `
+        export function ${input.name}() {
+          return <p>I am a component!</p>;
+        }
+      `,
+    });
+    ```
+
+  </Tab>
+  <Tab>
+    ```ts copy
+    import { defineTemplate } from 'tsnew';
+    import { input } from './input';
+
+    export default defineTemplate({
+      input,
+      path: ({ input }) => `components/${input.name}/${input.name}.test.tsx`,
+      content: ({ input }) => `
+        import { ${input.name} } from './${input.name}';
+
+        test('render component', () => {
+          throw new Error('Please add tests!');
+        });
+      `,
+    });
+    ```
+
+  </Tab>
+  <Tab>
+    ```ts copy
+    import { defineTemplate } from 'tsnew';
+    import { input } from './input';
+
+    export default defineTemplate({
+      input,
+      path: ({ input }) => `components/${input.name}/README.md`,
+      content: ({ input }) => `
+        # Component Docs for ${input.name}
+      `,
+    });
+    ```
+
+  </Tab>
+</Tabs>
+
+It would be tedious to keep prompting for the same input in each template, so the `input` is shared across multiple templates via imports. The [satisfies keyword](https://www.typescriptlang.org/docs/handbook/release-notes/typescript-4-9.html#the-satisfies-operator) is necessary because we want to retain the actual object type of the `input`. This way, when you attempt to use `input.name` it is known to be a valid string property.
+
+Alright, let's run our `component` template:
+
+```sh copy
+npx tsnew component
+```
+
+Let's say that we want to create a `Button` component:
+
+```ansi
+┌  🆕 tsnew start
+│
+◇  What is the name of this component?
+│  Button
+│
+●  Created components/Button/README.md
+│
+●  Created components/Button/Button.tsx
+│
+●  Created components/Button/Button.test.tsx
+│
+└  🆕 tsnew end
+```
+
+Nice! The following files were created:
+
+```ansi
+components/
+└── Button/
+    ├── Button.tsx
+    ├── Button.test.tsx
+    └── README.md
+```
+
+<Tabs items={['Button.tsx', 'Button.test.tsx', 'README.md']}>
+  <Tab>
+    ```ts
+    export function Button() {
+      return <p>I am a component!</p>;
+    }
+    ```
+  </Tab>
+  <Tab>
+    ```ts
+    import { Button } from './Button';
+
+    test('render component', () => {
+      throw new Error('Please add tests!');
+    });
+    ```
+
+  </Tab>
+  <Tab>
+  ```md
+  # Component Docs for Button
+  ```
+  </Tab>
+</Tabs>
