@@ -39,33 +39,34 @@
     "typescript": "5.x"
   },
   "dependencies": {
-    "@clack/prompts": "^0.6.3",
-    "boxen": "^7.1.0",
-    "bundle-require": "^4.0.1",
-    "cac": "^6.7.14",
-    "colorette": "^2.0.20",
-    "esbuild": "^0.17.19",
-    "globby": "^13.1.4",
-    "oo-ascii-tree": "^1.81.0",
-    "tree-node-cli": "^1.6.0"
+    "@clack/prompts": "0.11.0",
+    "boxen": "8.0.1",
+    "bundle-require": "5.1.0",
+    "cac": "6.7.14",
+    "colorette": "2.0.20",
+    "esbuild": "0.25.5",
+    "globby": "14.1.0",
+    "oo-ascii-tree": "1.112.0",
+    "tree-node-cli": "1.6.0"
   },
   "devDependencies": {
-    "@auto-it/all-contributors": "^10.46.0",
-    "@auto-it/first-time-contributor": "^10.46.0",
-    "@auto-it/npm": "^10.46.0",
-    "@auto-it/released": "^10.46.0",
-    "@types/node": "^20.2.5",
-    "auto": "^10.46.0",
-    "npm-check-updates": "^18.0.1",
-    "prettier": "^2.8.8",
-    "publint": "^0.1.12",
-    "tsup": "^6.7.0",
-    "typescript": "^5.0.4"
+    "@auto-it/all-contributors": "11.3.0",
+    "@auto-it/first-time-contributor": "11.3.0",
+    "@auto-it/npm": "11.3.0",
+    "@auto-it/released": "11.3.0",
+    "@types/node": "22.15.29",
+    "auto": "11.3.0",
+    "npm-check-updates": "18.0.1",
+    "prettier": "3.5.3",
+    "publint": "0.3.12",
+    "tsup": "8.5.0",
+    "typescript": "5.8.3"
   },
   "workspaces": [
     "site"
   ],
   "scripts": {
+    "bin": "$npm_package_bin_tsnew",
     "dev": "tsup --watch",
     "site": "npm run dev --workspace site",
     "build": "tsup",
@@ -75,6 +76,8 @@
     "lint": "publint --strict",
     "coverage": "echo 'Not implemented yet.'; exit 0",
     "test": "echo 'Not implemented yet.'; exit 0",
-    "release": "auto shipit"
+    "release": "auto shipit",
+    "deps:upgrade": "npm-check-updates --interactive --upgrade",
+    "deps:outdated": "npm-check-updates"
   }
 }
