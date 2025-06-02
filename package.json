@@ -1,7 +1,7 @@
 {
   "name": "tsnew",
   "version": "0.6.1",
-  "description": "Code scaffolding tool for TypeScript projects.",
+  "description": "Type-safe Code Generator",
   "homepage": "https://tsnew.dev/",
   "author": "Sunny Singh <me@sunnysingh.io> (https://sunnysingh.io/)",
   "license": "MIT",
@@ -56,6 +56,7 @@
     "@auto-it/released": "^10.46.0",
     "@types/node": "^20.2.5",
     "auto": "^10.46.0",
+    "npm-check-updates": "^18.0.1",
     "prettier": "^2.8.8",
     "publint": "^0.1.12",
     "tsup": "^6.7.0",
