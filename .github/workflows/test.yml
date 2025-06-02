@@ -8,9 +8,9 @@ on:
 jobs:
   setup:
     name: '🚜 Set up environment'
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
       - uses: ./.github/actions/setup-environment
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
@@ -18,9 +18,9 @@ jobs:
   formatcheck:
     needs: setup
     name: '🌈 Check formatting'
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
       - id: setup-environment
         uses: ./.github/actions/setup-environment
         with:
@@ -32,9 +32,9 @@ jobs:
   typecheck:
     needs: setup
     name: '🛡️ Check types'
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
       - id: setup-environment
         uses: ./.github/actions/setup-environment
         with:
@@ -46,9 +46,9 @@ jobs:
   coverage:
     needs: setup
     name: '🧪 Test and coverage'
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
       - id: setup-environment
         uses: ./.github/actions/setup-environment
         with:
@@ -60,9 +60,9 @@ jobs:
   build-and-lint:
     needs: setup
     name: '🛠 Build and lint'
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
       - id: setup-environment
         uses: ./.github/actions/setup-environment
         with:
@@ -83,7 +83,7 @@ jobs:
       - formatcheck
       - coverage
       - build-and-lint
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-latest
     steps:
       - name: Check
         shell: bash

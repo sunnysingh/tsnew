@@ -9,8 +9,8 @@ type GetPromptTypes<Prompt extends Record<string, PromptType>> = {
   [Property in keyof Prompt]: Prompt[Property]['type'] extends 'text'
     ? string
     : Prompt[Property]['type'] extends 'confirm'
-    ? boolean
-    : undefined;
+      ? boolean
+      : undefined;
 };
 
 export type Input = Record<string, PromptType>;
