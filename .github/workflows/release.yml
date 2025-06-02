@@ -11,22 +11,16 @@ env:
 
 jobs:
   release:
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
         with:
           fetch-depth: 0
           token: ${{ secrets.ADMIN_TOKEN }}
 
-      - name: Set up Node.js
-        uses: actions/setup-node@v3
+      - uses: ./.github/actions/setup-environment
         with:
-          node-version-file: .nvmrc
-          cache: npm
-          cache-dependency-path: package-lock.json
-
-      - name: Install dependencies
-        run: npm clean-install --include dev
+          token: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Build package
         run: npm run build
