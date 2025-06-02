@@ -1,3 +1,26 @@
+# v0.7.0 (Mon Jun 02 2025)
+
+#### 🚀 Feature Enhancement
+
+- Upgrade [#9](https://github.com/sunnysingh/tsnew/pull/9) ([@sunnysingh](https://github.com/sunnysingh))
+
+#### 🧰 Bug Fix
+
+- Site [#4](https://github.com/sunnysingh/tsnew/pull/4) ([@sunnysingh](https://github.com/sunnysingh))
+
+#### 📖 Documentation
+
+- Support manual site deploys [#8](https://github.com/sunnysingh/tsnew/pull/8) ([@sunnysingh](https://github.com/sunnysingh))
+- Fix site build [#7](https://github.com/sunnysingh/tsnew/pull/7) ([@sunnysingh](https://github.com/sunnysingh))
+- Improve docs [#6](https://github.com/sunnysingh/tsnew/pull/6) ([@sunnysingh](https://github.com/sunnysingh))
+- Update docs [#5](https://github.com/sunnysingh/tsnew/pull/5) ([@sunnysingh](https://github.com/sunnysingh))
+
+#### Authors: 1
+
+- Sunny Singh ([@sunnysingh](https://github.com/sunnysingh))
+
+---
+
 # v0.6.1 (Sun May 28 2023)
 
 #### 🧰 Bug Fix
